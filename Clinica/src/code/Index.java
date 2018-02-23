@@ -13,6 +13,7 @@ import Conexion.Conexion;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -26,7 +27,7 @@ public class Index extends javax.swing.JFrame {
     public Index() {
         initComponents();
         this.setTitle("Pagina Principal");
-        this.setSize(850, 480);
+        this.setSize(1080, 470);
         this.setLocationRelativeTo(null);
     }
 
@@ -53,6 +54,7 @@ public class Index extends javax.swing.JFrame {
         txt_pac_id = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         btn_limpiar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -78,9 +80,13 @@ public class Index extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
+        }
 
         getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(190, 0, 730, 410);
+        jScrollPane1.setBounds(190, 0, 870, 410);
 
         btn_buscar.setBackground(new java.awt.Color(255, 255, 255));
         btn_buscar.setText("Buscar");
@@ -119,6 +125,15 @@ public class Index extends javax.swing.JFrame {
         });
         getContentPane().add(btn_limpiar);
         btn_limpiar.setBounds(95, 80, 80, 23);
+
+        jButton1.setText("ajustar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1);
+        jButton1.setBounds(20, 280, 67, 23);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/535813fc9bbdd54.JPG"))); // NOI18N
         getContentPane().add(jLabel1);
@@ -176,10 +191,12 @@ public class Index extends javax.swing.JFrame {
         if (!str_id.equals("")) {
             consulta += " x.pac_id= " + str_id;
         }
-
-        
+        TableColumnModel modelcol = jTable1.getColumnModel();
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        int total = modelcol.getColumnCount();
+
         modelo.setRowCount(0);
+
         try {
             Connection conn = Conexion.getConnection();
 
@@ -204,8 +221,20 @@ public class Index extends javax.swing.JFrame {
                 jTable1.setModel(modelo);
             }//while
 
-            //txt_resultados.setText(resultados_impresos);
-            System.out.println(resultados_impresos);
+            for (int i = 0; i < total; i++) {
+               int tail=0;
+               int total2 = modelo.getRowCount();
+                for (int j = 0; j < total2; j++) {
+                    if (modelo.getValueAt(j, i)!=null) {
+                        int tail2=modelo.getValueAt(j,i).toString().length()*7;
+                        if (tail2>tail) {
+                            tail=tail2;
+                        }modelcol.getColumn(i).setPreferredWidth(tail);
+                        
+                    }
+                }
+
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la busqueda: " + e);
@@ -241,9 +270,13 @@ public class Index extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        BuscarPacientes vt = new BuscarPacientes(this,true);
+        BuscarPacientes vt = new BuscarPacientes(this, true);
         vt.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -283,6 +316,7 @@ public class Index extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_limpiar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
