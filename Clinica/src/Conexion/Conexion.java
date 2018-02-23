@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 public class Conexion {
     public static final String tblusuarios ="usuarios";
     public  static final String tblpacientes="pacientes";
+    public static final String tblpagos="pagos";
     public static Connection  getConnection(){
         Connection conn =null;
         try {

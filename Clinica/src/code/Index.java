@@ -5,6 +5,15 @@
  */
 package code;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import Conexion.Conexion;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JTable;
+
 /**
  *
  * @author Angel
@@ -16,6 +25,9 @@ public class Index extends javax.swing.JFrame {
      */
     public Index() {
         initComponents();
+        this.setTitle("Pagina Principal");
+        this.setSize(850, 480);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -28,22 +40,32 @@ public class Index extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jTable1 = new JTable(){
+
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+
+                return false; //Las celdas no son editables.
+
+            }
+        };
+        btn_buscar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txt_pac_id = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btn_limpiar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        menu_newpaciente = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
 
+        jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jTable1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -52,40 +74,77 @@ public class Index extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Numero de Cliente", "Nombre", "Pagos", "Fecha", "Concepto"
+                "Numero de Cliente", "Nombre del Cliente", "Pagos", "Fecha", "Concepto"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(190, 0, 730, 410);
+
+        btn_buscar.setBackground(new java.awt.Color(255, 255, 255));
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                btn_buscarActionPerformed(evt);
             }
         });
+        getContentPane().add(btn_buscar);
+        btn_buscar.setBounds(10, 80, 80, 23);
 
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Nombre del paciente");
-
+        jLabel2.setFont(new java.awt.Font("PMingLiU-ExtB", 1, 14)); // NOI18N
         jLabel2.setText("Numero de Cliente");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(30, 10, 160, 30);
+        getContentPane().add(txt_pac_id);
+        txt_pac_id.setBounds(18, 40, 160, 30);
 
-        jButton2.setText("Agrgegar Pago");
+        jButton2.setBackground(new java.awt.Color(255, 255, 255));
+        jButton2.setFont(new java.awt.Font("PMingLiU-ExtB", 0, 18)); // NOI18N
+        jButton2.setText("Agregar pago");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(10, 150, 170, 30);
 
-        jButton3.setText("Limpiar");
+        btn_limpiar.setBackground(new java.awt.Color(255, 255, 255));
+        btn_limpiar.setText("Limpiar");
+        btn_limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_limpiar);
+        btn_limpiar.setBounds(95, 80, 80, 23);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/535813fc9bbdd54.JPG"))); // NOI18N
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(-7, 4, 800, 400);
 
         jMenu1.setText("Archivo");
 
-        jMenuItem2.setText("Nuevo Paciente");
+        menu_newpaciente.setText("Nuevo Paciente");
+        menu_newpaciente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_newpacienteMouseClicked(evt);
+            }
+        });
+        menu_newpaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_newpacienteActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menu_newpaciente);
+
+        jMenuItem2.setText("Buscar Pacientes");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuBar1.add(jMenu1);
@@ -99,62 +158,92 @@ public class Index extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3))
-                    .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(1, 1, 1)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addGap(71, 71, 71)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+        //obtener los valores
+        String str_id = txt_pac_id.getText();
+        String consulta = "SELECT x.pac_id, x.pac_nombre, y.pag_monto, y.pag_fecha, y.pag_concepto FROM pacientes x , pagos y";
+        //String consulta = "SELECT pac_id, pac_nombre FROM " + Conexion.tblpacientes;
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        if (!str_id.equals("")) {
+            consulta += " WHERE x.pac_id = y.pac_id AND ";
+
+        }//if
+
+        if (!str_id.equals("")) {
+            consulta += " x.pac_id= " + str_id;
+        }
+
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+        try {
+            Connection conn = Conexion.getConnection();
+
+            //preparar:
+            PreparedStatement query = conn.prepareStatement(consulta);
+            ResultSet rs = query.executeQuery();
+
+            String resultados_impresos = "";
+
+            //resultados
+            while (rs.next()) {
+
+                Vector v = new Vector();
+                v.add(rs.getString(1));
+                v.add(rs.getString(2));
+                v.add(rs.getString(3));
+                v.add(rs.getString(4));
+                v.add(rs.getString(5));
+                String id = rs.getString("pac_id");
+                String nombre = rs.getString("pac_nombre");
+                modelo.addRow(v);
+                jTable1.setModel(modelo);
+            }//while
+
+            //txt_resultados.setText(resultados_impresos);
+            System.out.println(resultados_impresos);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error en la busqueda: " + e);
+        }//catch
+
+
+    }//GEN-LAST:event_btn_buscarActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Abrir JDialog para ir a agregar el pago
+        AgregarPago vt = new AgregarPago(this, true);
+        vt.setVisible(true);
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void menu_newpacienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_newpacienteMouseClicked
+        // TODO add your handling code here:
+        AgregarPaciente vt = new AgregarPaciente(this, true);
+        vt.setVisible(true);
+    }//GEN-LAST:event_menu_newpacienteMouseClicked
+
+    private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
+        // TODO add your handling code here:
+        txt_pac_id.setText("");
+    }//GEN-LAST:event_btn_limpiarActionPerformed
+
+    private void menu_newpacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_newpacienteActionPerformed
+        // TODO add your handling code here:
+        AgregarPaciente vt = new AgregarPaciente(this, true);
+        vt.setVisible(true);
+    }//GEN-LAST:event_menu_newpacienteActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        BuscarPacientes vt = new BuscarPacientes(this,true);
+        vt.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,9 +281,9 @@ public class Index extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_buscar;
+    private javax.swing.JButton btn_limpiar;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
@@ -204,7 +293,7 @@ public class Index extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem menu_newpaciente;
+    private javax.swing.JTextField txt_pac_id;
     // End of variables declaration//GEN-END:variables
 }
