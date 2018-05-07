@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
  *
  * @author Angel
  */
+//Adding something new
 public class Conexion {
     public static final String tblusuarios ="usuarios";
     public  static final String tblpacientes="pacientes";
